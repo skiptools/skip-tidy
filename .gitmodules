@@ -1,0 +1,3 @@
+[submodule "Sources/CLibTidy"]
+	path = Sources/CLibTidy
+	url = https://github.com/htacg/tidy-html5.git

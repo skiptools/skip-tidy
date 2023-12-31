@@ -11,15 +11,21 @@ import SkipFFI
 
 //let x = CLibTidy.tidyCreate()
 
-struct TidyDoc {
-}
 
+//struct TidyDoc {
+//}
 
 #if !SKIP
-public typealias ctmbstr = UnsafePointer<Int8>
+//public typealias ctmbstr = UnsafePointer<Int8>
 #else
-public typealias ctmbstr = OpaquePointer
-//func String(cString: ctmbstr) -> String { cString.getString(0) }
+public typealias TidyDoc = OpaquePointer
+public typealias ctmbstr = String
+
+/// Fake the cString call, since we are using JNA's String/pointer conversions
+func String(cString: ctmbstr) -> String {
+    //cString.getString(0)
+    cString
+}
 #endif
 
 /// `TidyLibrary` is an encapsulation of `libtidy` functions and structures.
@@ -63,6 +69,21 @@ public final class TidyLibrary {
     // SKIP EXTERN
     public func tidyPlatform() -> ctmbstr {
         return CLibTidy.tidyPlatform()
+    }
+
+    // SKIP EXTERN
+    public func tidyCreate() -> TidyDoc {
+        return CLibTidy.tidyCreate()
+    }
+
+    // SKIP EXTERN
+    public func tidyRelease(_ tdoc: TidyDoc) {
+        CLibTidy.tidyRelease(tdoc)
+    }
+
+    // SKIP EXTERN
+    public func tidyParseString(_ tdoc: TidyDoc, _ content: ctmbstr?) -> Int32 {
+        return CLibTidy.tidyParseString(tdoc, content)
     }
 
     //    public var Z_OK: Int32 {

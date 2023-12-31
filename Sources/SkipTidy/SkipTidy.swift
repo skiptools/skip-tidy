@@ -28,12 +28,10 @@ extension String {
     /// Tidies the given String into a valid XML document.
     public func tidy() throws -> String {
 
-//        guard
-//            let tdoc: TidyDoc = SwLibTidy.tidyCreate()
-//        else {
-//            throw TidyUnavailableError(errorDescription: "Could not create tidy document")
-//        }
-//        defer { tidyRelease( tdoc ) }
+        let tdoc = CLibTidy.tidyCreate()
+        defer { CLibTidy.tidyRelease(tdoc) }
+
+        let _ = CLibTidy.tidyParseString(tdoc, self)
 
         #if !SKIP
 

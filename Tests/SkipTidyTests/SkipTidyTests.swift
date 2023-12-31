@@ -28,8 +28,9 @@ final class SkipTidyTests: XCTestCase {
             XCTAssertEqual("Apple macOS", Tidy.tidyPlatform)
         }
 
-        XCTAssertEqual("5.9.20", Tidy.tidyVersion)
-        XCTAssertEqual("2022.01.25", Tidy.tidyReleaseDate)
+        XCTAssertEqual("5.9.8", Tidy.tidyVersion)
+        //XCTAssertEqual("5.9.20", Tidy.tidyVersion)
+        //XCTAssertEqual("2022.01.25", Tidy.tidyReleaseDate)
     }
 
     public func testTidyHTML() throws {

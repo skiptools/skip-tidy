@@ -38,21 +38,30 @@ final class SkipTidyTests: XCTestCase {
     }
 
     public func testTidyHTML() throws {
-        XCTAssertEqual(try "<html></html>".tidy(), "<html></html>")
+        XCTAssertEqual(try "<html></html>".tidy(), """
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <title></title>
+        </head>
+        <body>
+        </body>
+        </html>
+        
+        """)
 
-//        XCTAssertEqual(try "<html></html>".tidy(), """
-//        <!DOCTYPE html>
-//        <html>
-//        <head>
-//        <meta name="generator" content=
-//        "HTML Tidy for HTML5 for Apple macOS version 5.9.8">
-//        <title></title>
-//        </head>
-//        <body>
-//        </body>
-//        </html>
-//        
-//        """)
+        XCTAssertEqual(try "<html><body><h1>Header</BADTAG></body></html>".tidy(), """
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <title></title>
+        </head>
+        <body>
+        <h1>Header</h1>
+        </body>
+        </html>
+
+        """)
     }
 }
 

@@ -26,31 +26,37 @@ public struct Tidy {
 extension String {
 
     /// Tidies the given String into a valid XML document.
-    public func tidy() throws -> String {
-
+    public func tidy() throws -> String? {
         let tdoc = CLibTidy.tidyCreate()
         defer { CLibTidy.tidyRelease(tdoc) }
 
-        let _ = CLibTidy.tidyParseString(tdoc, self)
+        _ = CLibTidy.tidyParseString(tdoc, self)
+        _ = CLibTidy.tidyCleanAndRepair(tdoc)
 
-        #if !SKIP
+        let outpBuffer = TidyBufferPtr()
+        defer { outpBuffer.deallocate() }
 
-//        let errBuffer = SwLibTidyBuffer()
-//        let _ = tidySetErrorBuffer( tdoc, errbuf: errBuffer )
-//        _ = tidyParseString( tdoc, self)
-//        _ = tidyCleanAndRepair( tdoc )
-//
-//        let outpBuffer = SwLibTidyBuffer()
-//        _ = tidySaveBuffer( tdoc, outpBuffer )
-//
-//        _ = tidyOptResetToSnapshot( tdoc )     /* needed to restore user option values! */
-//
-//        return outpBuffer.StringValue() ?? self
+        CLibTidy.tidyBufInit(outpBuffer)
+        defer { CLibTidy.tidyBufFree(outpBuffer) }
 
-        return self
-        #else
-        return self
-        #endif
+        _ = CLibTidy.tidySaveBuffer(tdoc, outpBuffer)
+
+        let size = outpBuffer.pointee.size
+        if size <= 0 {
+            return nil
+        } else {
+            let bp = outpBuffer.pointee.bp
+            let data = Data(bytes: bp!, count: Int(size))
+            let str = String(data: data, encoding: String.Encoding.utf8)
+
+            // sadly, this seems to be the only way to prevent the generator header from being included in the output (which makes unit testing fragile)
+            let generator = """
+            <meta name="generator" content=
+            "HTML Tidy for HTML5 for \(Tidy.tidyPlatform) version \(Tidy.tidyVersion)">
+
+            """
+            return str?.replacingOccurrences(of: generator, with: "")
+        }
     }
 }
 

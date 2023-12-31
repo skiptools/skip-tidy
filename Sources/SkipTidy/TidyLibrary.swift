@@ -3,15 +3,14 @@
 // as published by the Free Software Foundation https://fsf.org
 
 import Foundation
+import SkipFFI
 #if !SKIP
 import CLibTidy
-#else
-import SkipFFI
 #endif
 
 /// `TidyLibrary` is an encapsulation of `libtidy` functions and structures.
 final class TidyLibrary {
-    public static let instance = TidyLibrary()
+    static let instance = registerNatives(TidyLibrary(), frameworkName: "SkipTidy", libraryName: "tidy")
 
     /* SKIP EXTERN */ public func tidyReleaseDate() -> ctmbstr {
         return CLibTidy.tidyReleaseDate()
@@ -59,30 +58,6 @@ final class TidyLibrary {
 
     /* SKIP EXTERN */ public func tidyBufFree(_ buf: TidyBufferPtr) {
         CLibTidy.tidyBufFree(buf)
-    }
-
-    private init() {
-        #if SKIP
-        do {
-            // should be bundled from the CLibTidy module in jni/arm64-v8a/libtidy.so
-            com.sun.jna.Native.register((TidyLibrary.self as kotlin.reflect.KClass).java, "tidy")
-        } catch let error as java.lang.UnsatisfiedLinkError {
-            // for Robolectric we link against out locally-built library version created by either Xcode or SwiftPM
-            let libName = "SkipTidy"
-            var frameworkPath: String
-            if let bundlePath = ProcessInfo.processInfo.environment["XCTestBundlePath"] { // running from Xcode
-                frameworkPath = bundlePath + "/../PackageFrameworks/\(libName).framework/\(libName)"
-            } else { // SwiftPM doesn't set XCTestBundlePath and builds as a .dylib rather than a .framework
-                let baseDir = FileManager.default.currentDirectoryPath + "/../../../../../.."
-                frameworkPath = baseDir + "/x86_64-apple-macosx/debug/lib\(libName).dylib" // check for Intel
-                if !FileManager.default.fileExists(atPath: frameworkPath) { // no x86_64 … try ARM
-                    frameworkPath = baseDir + "/arm64-apple-macosx/debug/lib\(libName).dylib"
-                }
-            }
-
-            com.sun.jna.Native.register((TidyLibrary.self as kotlin.reflect.KClass).java, frameworkPath)
-        }
-        #endif
     }
 }
 

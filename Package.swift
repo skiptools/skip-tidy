@@ -32,10 +32,6 @@ let package = Package(
         .package(url: "https://source.skip.tools/skip-ffi.git", from: "0.2.3"),
     ],
     targets: [
-        .target(name: "CLibTidy", sources: ["src"], cSettings: [
-            .define("LIBTIDY_VERSION", to: "\"\(tidyVersion()[0])\"", nil),
-            .define("RELEASE_DATE", to: "\"\(tidyVersion()[1])\"", nil)
-        ], plugins: skipstone),
         .target(name: "SkipTidy", dependencies: [
             "CLibTidy",
             .product(name: "SkipFoundation", package: "skip-foundation"),
@@ -45,5 +41,9 @@ let package = Package(
             "SkipTidy",
             .product(name: "SkipTest", package: "skip")
         ], resources: [.process("Resources")], plugins: skipstone),
+        .target(name: "CLibTidy", sources: ["src"], cSettings: [
+            .define("LIBTIDY_VERSION", to: "\"\(tidyVersion()[0])\"", nil),
+            .define("RELEASE_DATE", to: "\"\(tidyVersion()[1])\"", nil)
+        ], plugins: skipstone),
     ]
 )

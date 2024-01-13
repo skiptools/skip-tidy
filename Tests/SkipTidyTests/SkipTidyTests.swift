@@ -29,7 +29,7 @@ final class SkipTidyTests: XCTestCase {
                 XCTAssertEqual("Linux", Tidy.tidyPlatform)
             }
         } else {
-            XCTAssertEqual("Apple macOS", Tidy.tidyPlatform)
+            XCTAssertEqual(isMacOS ? "Apple macOS" : "Apple iOS", Tidy.tidyPlatform)
         }
 
         //XCTAssertEqual("5.9.8", Tidy.tidyVersion)

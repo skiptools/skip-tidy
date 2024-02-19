@@ -17,11 +17,6 @@
 # the blocks to add to the build.gradle.kts
 build:
   contents:
-    - block: 'plugins'
-      export: false
-      contents:
-        - 'alias(libs.plugins.android.library)'
-
     - block: 'android'
       export: false
       contents:

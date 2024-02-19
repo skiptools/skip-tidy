@@ -42,7 +42,6 @@ let package = Package(
             .product(name: "SkipTest", package: "skip")
         ], resources: [.process("Resources")], plugins: skipstone),
         .target(name: "CLibTidy", sources: ["src"], cSettings: [
-            .define("SKIP_BUILD_NDK"), // needed for Skip to add native gradle build support
             .define("LIBTIDY_VERSION", to: "\"\(tidyVersion()[0])\"", nil),
             .define("RELEASE_DATE", to: "\"\(tidyVersion()[1])\"", nil)
         ], plugins: skipstone),

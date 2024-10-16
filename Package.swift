@@ -12,7 +12,7 @@ let skipstone = [Target.PluginUsage.plugin(name: "skipstone", package: "skip")]
 func tidyVersion() -> [String] {
     let PWD = (#filePath as NSString).deletingLastPathComponent
     let VERSION_FILE = NSString.path(withComponents: [PWD, "Sources", "CLibTidy", "version.txt"])
-    if let CONTENTS = try? String(contentsOfFile: VERSION_FILE).components(separatedBy: "\n") {
+    if let CONTENTS = try? String(contentsOfFile: VERSION_FILE, encoding: .utf8).components(separatedBy: "\n") {
         return CONTENTS
     }
 
@@ -24,12 +24,12 @@ let package = Package(
     defaultLocalization: "en",
     platforms: [.iOS(.v16), .macOS(.v13), .tvOS(.v16), .watchOS(.v9), .macCatalyst(.v16)],
     products: [
-        .library(name: "SkipTidy", targets: ["SkipTidy"]),
+        .library(name: "SkipTidy", type: .dynamic, targets: ["SkipTidy"]),
     ],
     dependencies: [
-        .package(url: "https://source.skip.tools/skip.git", from: "1.0.0"),
-        .package(url: "https://source.skip.tools/skip-unit.git", from: "1.0.0"),
-        .package(url: "https://source.skip.tools/skip-foundation.git", from: "1.0.0"),
+        .package(url: "https://source.skip.tools/skip.git", from: "1.1.11"),
+        .package(url: "https://source.skip.tools/skip-unit.git", from: "1.0.1"),
+        .package(url: "https://source.skip.tools/skip-foundation.git", from: "1.1.11"),
         .package(url: "https://source.skip.tools/skip-ffi.git", from: "1.0.0"),
     ],
     targets: [

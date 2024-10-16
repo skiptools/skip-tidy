@@ -24,13 +24,13 @@ let package = Package(
     defaultLocalization: "en",
     platforms: [.iOS(.v16), .macOS(.v13), .tvOS(.v16), .watchOS(.v9), .macCatalyst(.v16)],
     products: [
-        .library(name: "SkipTidy", type: .dynamic, targets: ["SkipTidy"]),
+        .library(name: "SkipTidy", targets: ["SkipTidy"]),
     ],
     dependencies: [
-        .package(url: "https://source.skip.tools/skip.git", from: "0.8.46"),
-        .package(url: "https://source.skip.tools/skip-unit.git", from: "0.7.0"),
-        .package(url: "https://source.skip.tools/skip-foundation.git", from: "0.6.11"),
-        .package(url: "https://source.skip.tools/skip-ffi.git", from: "0.3.2"),
+        .package(url: "https://source.skip.tools/skip.git", from: "1.0.0"),
+        .package(url: "https://source.skip.tools/skip-unit.git", from: "1.0.0"),
+        .package(url: "https://source.skip.tools/skip-foundation.git", from: "1.0.0"),
+        .package(url: "https://source.skip.tools/skip-ffi.git", from: "1.0.0"),
     ],
     targets: [
         .target(name: "SkipTidy", dependencies: [
